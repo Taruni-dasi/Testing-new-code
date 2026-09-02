@@ -8,199 +8,283 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{
   font-family:'Segoe UI',Tahoma,sans-serif;
-  background:linear-gradient(135deg,#1a0533 0%,#2d1b69 40%,#4a1942 100%);
+  background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);
   min-height:100vh;display:flex;justify-content:center;align-items:center;
   padding:15px;color:#fff;
 }
 .container{
-  background:rgba(255,255,255,0.07);backdrop-filter:blur(20px);
-  border:1px solid rgba(255,255,255,0.15);border-radius:24px;
-  padding:25px;max-width:500px;width:100%;text-align:center;
+  background:rgba(255,255,255,0.07);backdrop-filter:blur(10px);
+  border-radius:24px;padding:25px;max-width:500px;width:100%;
+  box-shadow:0 20px 60px rgba(0,0,0,0.5);text-align:center;
+  border:1px solid rgba(255,255,255,0.1);
 }
-h1{font-size:22px;margin-bottom:15px;color:#ffd700;text-shadow:0 0 20px rgba(255,215,0,0.5)}
+h1{font-size:22px;margin-bottom:15px;color:#f0c040;text-shadow:0 0 20px rgba(240,192,64,0.3)}
 .image-box{
   width:100%;height:260px;border-radius:16px;overflow:hidden;
   margin-bottom:15px;position:relative;
-  border:2px solid rgba(255,215,0,0.3);
+  box-shadow:0 8px 30px rgba(0,0,0,0.4);
 }
 .image-box svg{width:100%;height:100%}
-.med-title{font-size:20px;color:#ffd700;margin-bottom:5px;font-weight:700}
-.mantra{font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:15px;font-style:italic}
+.title{font-size:20px;color:#e8d5b7;margin-bottom:5px;font-weight:600}
+.subtitle{font-size:13px;color:#a89070;margin-bottom:15px}
 .timer{
-  font-size:56px;color:#fff;font-weight:700;
+  font-size:52px;color:#f0c040;font-weight:bold;
   font-family:'Courier New',monospace;margin:10px 0;
-  text-shadow:0 0 30px rgba(255,215,0,0.4);
+  text-shadow:0 0 30px rgba(240,192,64,0.4);
 }
 .timer.pulse{animation:pulse 1s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
-.controls{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:15px}
+.controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:15px 0}
 button{
-  padding:14px 20px;font-size:15px;border:none;border-radius:12px;
-  cursor:pointer;font-weight:700;transition:all 0.3s;
+  padding:14px 22px;font-size:15px;border:none;border-radius:12px;
+  cursor:pointer;font-weight:600;transition:all 0.3s;
   -webkit-tap-highlight-color:transparent;
 }
-.btn-start{background:linear-gradient(135deg,#ffd700,#ff8c00);color:#1a0533;flex:1;min-width:180px}
-.btn-stop-active{background:linear-gradient(135deg,#ff4444,#cc0000);color:#fff;flex:1;min-width:180px}
-.btn-nav{background:rgba(255,255,255,0.15);color:#fff;min-width:90px}
-.btn-nav:active,.btn-start:active,.btn-stop-active:active{transform:scale(0.95)}
+button:active{transform:scale(0.95)}
+.btn-start{background:linear-gradient(135deg,#f0c040,#e8a020);color:#1a1a2e;min-width:180px}
+.btn-stop{background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;min-width:180px}
+.btn-nav{background:rgba(255,255,255,0.12);color:#e8d5b7;border:1px solid rgba(255,255,255,0.15)}
+.btn-nav:hover{background:rgba(255,255,255,0.2)}
 button:disabled{opacity:0.3;cursor:not-allowed;transform:none!important}
-.status{margin-top:12px;font-size:14px;color:rgba(255,255,255,0.7)}
-.status.playing{color:#4ade80;font-weight:700}
-.status.done{color:#ffd700;font-weight:700}
-.dots{display:flex;gap:8px;justify-content:center;margin-top:12px}
-.dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.2);transition:0.3s}
-.dot.active{background:#ffd700;box-shadow:0 0 10px #ffd700}
-.round-info{font-size:12px;color:rgba(255,255,255,0.4);margin-top:8px}
+.status{margin-top:10px;font-size:14px;color:#8a8a9a;min-height:20px}
+.status.active{color:#4ade80;font-weight:600}
+.demo-toggle{
+  margin-top:15px;font-size:12px;color:#666;cursor:pointer;
+  text-decoration:underline;
+}
+.mala{font-size:28px;margin:5px 0;letter-spacing:3px;opacity:0.6}
+.progress-bar{
+  width:100%;height:4px;background:rgba(255,255,255,0.1);
+  border-radius:2px;margin:10px 0;overflow:hidden;
+}
+.progress-fill{
+  height:100%;background:linear-gradient(90deg,#f0c040,#e8a020);
+  border-radius:2px;transition:width 1s linear;width:0%;
+}
 </style>
 </head>
 <body>
 <div class="container">
   <h1>🙏 Джапа Медитация</h1>
+  <div class="mala">📿</div>
+  
   <div class="image-box" id="imageBox"></div>
-  <div class="med-title" id="medTitle"></div>
-  <div class="mantra" id="mantraText"></div>
+  
+  <div class="title" id="title"></div>
+  <div class="subtitle" id="subtitle"></div>
+  
+  <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
   <div class="timer" id="timer">08:00</div>
+  
   <div class="controls">
-    <button class="btn-nav" id="prevBtn" onclick="prev()">◀</button>
+    <button class="btn-nav" id="prevBtn" onclick="prev()">← Прошлая</button>
     <button class="btn-start" id="startBtn" onclick="toggle()">▶ Начать</button>
-    <button class="btn-nav" id="nextBtn" onclick="next()">▶</button>
+    <button class="btn-nav" id="nextBtn" onclick="next()">Следующая →</button>
   </div>
-  <div class="dots">
-    <div class="dot active" id="d0"></div>
-    <div class="dot" id="d1"></div>
-    <div class="dot" id="d2"></div>
-  </div>
-  <div class="status" id="status">Нажми «Начать» для медитации</div>
-  <div class="round-info">8 минут ≈ 4 круга джапы (16 кругов = 1 час)</div>
+  
+  <div class="status" id="status">Выберите медитацию и нажмите «Начать»</div>
+  <div class="demo-toggle" onclick="toggleDemo()" id="demoLabel">Демо-режим: ВЫКЛ (нажми для 15 сек)</div>
 </div>
 
 <script>
-const DATA=[
+const DURATION_FULL = 480;
+const DURATION_DEMO = 15;
+let demoMode = false;
+let duration = DURATION_FULL;
+let timeLeft = duration;
+let playing = false;
+let interval = null;
+let audioCtx = null;
+let gainNode = null;
+let oscillators = [];
+
+const slides = [
   {
-    title:"Шрила Свами Прабхупада",
-    mantra:"Харе Кришна Харе Кришна Кришна Кришна Харе Харе",
-    bg1:"#1a237e",bg2:"#4a148c",accent:"#ffd700",
-    icon:`<circle cx="150" cy="90" r="35" fill="#ffd700" opacity="0.3"/>
-      <circle cx="150" cy="90" r="25" fill="#ffd700" opacity="0.5"/>
-      <text x="150" y="97" text-anchor="middle" font-size="28" fill="#ffd700">🙏</text>
-      <text x="150" y="155" text-anchor="middle" font-size="16" fill="#ffd700" font-weight="bold">Шрила Прабхупада</text>
-      <text x="150" y="180" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.6)">Основатель ИСККОН</text>
-      <text x="150" y="210" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.4)">1896 — 1977</text>`
+    title: "Шрила Свами Прабхупада",
+    sub: "Основатель-ачарья ИСККОН",
+    bg1: "#b8860b", bg2: "#8B6914", bg3: "#DAA520",
+    symbol: "ॐ",
+    svgExtra: `<circle cx="150" cy="120" r="50" fill="none" stroke="#f0c040" stroke-width="2" opacity="0.4"/>
+               <circle cx="150" cy="120" r="70" fill="none" stroke="#f0c040" stroke-width="1" opacity="0.2"/>
+               <text x="150" y="200" text-anchor="middle" fill="#f5deb3" font-size="11" opacity="0.7">Харе Кришна Харе Кришна</text>
+               <text x="150" y="218" text-anchor="middle" fill="#f5deb3" font-size="11" opacity="0.7">Кришна Кришна Харе Харе</text>`
   },
   {
-    title:"Чайтанья Махапрабху и Нитьянанда",
-    mantra:"Харе Рама Харе Рама Рама Рама Харе Харе",
-    bg1:"#b71c1c",bg2:"#e65100",accent:"#ffeb3b",
-    icon:`<circle cx="110" cy="90" r="30" fill="#ffeb3b" opacity="0.3"/>
-      <circle cx="190" cy="90" r="30" fill="#ffeb3b" opacity="0.3"/>
-      <text x="110" y="97" text-anchor="middle" font-size="26" fill="#ffeb3b">🙏</text>
-      <text x="190" y="97" text-anchor="middle" font-size="26" fill="#ffeb3b">🙏</text>
-      <text x="150" y="150" text-anchor="middle" font-size="14" fill="#ffeb3b" font-weight="bold">Чайтанья Махапрабху</text>
-      <text x="150" y="172" text-anchor="middle" font-size="13" fill="#ffeb3b">&amp; Господь Нитьянанда</text>
-      <text x="150" y="200" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.5)">Панча-таттва махатма</text>`
+    title: "Шри Чайтанья Махапрабху",
+    sub: "и Шри Нитьянанда Прабху",
+    bg1: "#2d6a4f", bg2: "#1b4332", bg3: "#52b788",
+    symbol: "☽",
+    svgExtra: `<circle cx="120" cy="120" r="40" fill="none" stroke="#90ee90" stroke-width="2" opacity="0.3"/>
+               <circle cx="180" cy="120" r="40" fill="none" stroke="#ffd700" stroke-width="2" opacity="0.3"/>
+               <text x="150" y="200" text-anchor="middle" fill="#d4edda" font-size="11" opacity="0.7">Харе Рама Харе Рама</text>
+               <text x="150" y="218" text-anchor="middle" fill="#d4edda" font-size="11" opacity="0.7">Рама Рама Харе Харе</text>`
   },
   {
-    title:"Радха и Кришна",
-    mantra:"Радхе Кришна Радхе Кришна Кришна Кришна Радхе Радхе",
-    bg1:"#1b5e20",bg2:"#004d40",accent:"#69f0ae",
-    icon:`<circle cx="120" cy="85" r="28" fill="#69f0ae" opacity="0.25"/>
-      <circle cx="180" cy="85" r="28" fill="#69f0ae" opacity="0.25"/>
-      <text x="120" y="93" text-anchor="middle" font-size="24" fill="#69f0ae">🙏</text>
-      <text x="180" y="93" text-anchor="middle" font-size="24" fill="#69f0ae">🙏</text>
-      <text x="150" y="145" text-anchor="middle" font-size="16" fill="#69f0ae" font-weight="bold">Радха &amp; Кришна</text>
-      <text x="150" y="170" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.6)">Вриндаван-лила</text>
-      <text x="150" y="200" text-anchor="middle" font-size="20" fill="rgba(255,255,255,0.3)">🦚</text>`
+    title: "Шри Шри Радха-Кришна",
+    sub: "Вечная Божественная Чета",
+    bg1: "#4a1942", bg2: "#1a1a5e", bg3: "#c2185b",
+    symbol: "❀",
+    svgExtra: `<circle cx="130" cy="115" r="35" fill="none" stroke="#ff69b4" stroke-width="2" opacity="0.3"/>
+               <circle cx="170" cy="115" r="35" fill="none" stroke="#87ceeb" stroke-width="2" opacity="0.3"/>
+               <text x="150" y="195" text-anchor="middle" fill="#f8bbd0" font-size="11" opacity="0.7">Радхе Радхе Шьям</text>
+               <text x="150" y="213" text-anchor="middle" fill="#bbdefb" font-size="11" opacity="0.7">Шьям Шьям Радхе</text>`
   }
 ];
 
-let idx=0,playing=false,timeLeft=480,interval=null,actx=null,nodes=[];
+let idx = 0;
 
-function render(){
-  const d=DATA[idx];
-  document.getElementById('imageBox').innerHTML=
-    `<svg viewBox="0 0 300 240"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0%" stop-color="${d.bg1}"/><stop offset="100%" stop-color="${d.bg2}"/>
-    </linearGradient></defs><rect width="300" height="240" fill="url(#g)"/>${d.icon}</svg>`;
-  document.getElementById('medTitle').textContent=d.title;
-  document.getElementById('mantraText').textContent=d.mantra;
-  for(let i=0;i<3;i++) document.getElementById('d'+i).className='dot'+(i===idx?' active':'');
+function renderSlide(){
+  const s = slides[idx];
+  document.getElementById('imageBox').innerHTML = `
+    <svg viewBox="0 0 300 260" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="g${idx}" cx="50%" cy="40%" r="70%">
+          <stop offset="0%" stop-color="${s.bg3}" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="${s.bg1}"/>
+        </radialGradient>
+      </defs>
+      <rect width="300" height="260" fill="url(#g${idx})"/>
+      <rect width="300" height="260" fill="${s.bg2}" opacity="0.3"/>
+      ${s.svgExtra}
+      <text x="150" y="130" text-anchor="middle" fill="#fff" font-size="48" opacity="0.8">${s.symbol}</text>
+      <text x="150" y="245" text-anchor="middle" fill="#fff" font-size="13" opacity="0.5" font-style="italic">Медитация ${idx+1} из 3</text>
+    </svg>`;
+  document.getElementById('title').textContent = s.title;
+  document.getElementById('subtitle').textContent = s.sub;
 }
 
-function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function fmt(t){
+  const m=Math.floor(t/60), s=t%60;
+  return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
 
-function toggle(){playing?stop():start()}
+function updateTimer(){
+  document.getElementById('timer').textContent = fmt(timeLeft);
+  const pct = ((duration - timeLeft)/duration)*100;
+  document.getElementById('progress').style.width = pct+'%';
+}
+
+function toggleDemo(){
+  demoMode = !demoMode;
+  duration = demoMode ? DURATION_DEMO : DURATION_FULL;
+  if(!playing){ timeLeft = duration; updateTimer(); }
+  document.getElementById('demoLabel').textContent = 
+    demoMode ? 'Демо-режим: ВКЛ (15 сек, нажми для 8 мин)' : 'Демо-режим: ВЫКЛ (нажми для 15 сек)';
+}
+
+/* ---- Web Audio: медитативный Ом-дрон ---- */
+function startDrone(){
+  try {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    gainNode = audioCtx.createGain();
+    gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+    gainNode.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + 2);
+    gainNode.connect(audioCtx.destination);
+
+    const freqs = [136.1, 272.2, 204.15]; // Ом-частоты
+    const types = ['sine','sine','triangle'];
+    const vols  = [0.5, 0.2, 0.15];
+
+    freqs.forEach((f,i) => {
+      const osc = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      osc.type = types[i];
+      osc.frequency.setValueAtTime(f, audioCtx.currentTime);
+      // лёгкое вибрато
+      const lfo = audioCtx.createOscillator();
+      const lfoGain = audioCtx.createGain();
+      lfo.frequency.setValueAtTime(0.3 + i*0.1, audioCtx.currentTime);
+      lfoGain.gain.setValueAtTime(1.5, audioCtx.currentTime);
+      lfo.connect(lfoGain);
+      lfoGain.connect(osc.frequency);
+      lfo.start();
+
+      g.gain.setValueAtTime(vols[i], audioCtx.currentTime);
+      osc.connect(g);
+      g.connect(gainNode);
+      osc.start();
+      oscillators.push(osc, lfo);
+    });
+
+    // Периодический "колокольчик" каждые 4 сек
+    scheduleBell();
+  } catch(e){ console.log('Audio not supported'); }
+}
+
+function scheduleBell(){
+  if(!playing || !audioCtx) return;
+  const osc = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(528, audioCtx.currentTime);
+  g.gain.setValueAtTime(0.08, audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2);
+  osc.connect(g); g.connect(audioCtx.destination);
+  osc.start(); osc.stop(audioCtx.currentTime + 2);
+  setTimeout(scheduleBell, 4000);
+}
+
+function stopDrone(){
+  if(gainNode && audioCtx){
+    gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1);
+  }
+  setTimeout(()=>{
+    oscillators.forEach(o=>{try{o.stop()}catch(e){}});
+    oscillators=[];
+    if(audioCtx){try{audioCtx.close()}catch(e){}}
+    audioCtx=null; gainNode=null;
+  }, 1200);
+}
+
+/* ---- Управление ---- */
+function toggle(){
+  playing ? stop() : start();
+}
 
 function start(){
-  if(!actx) actx=new(window.AudioContext||window.webkitAudioContext)();
-  if(actx.state==='suspended') actx.resume();
-  playing=true;timeLeft=480;
-  document.getElementById('startBtn').textContent='⏹ Стоп';
-  document.getElementById('startBtn').className='btn-stop-active';
-  document.getElementById('status').textContent='🎵 Медитация идёт...';
-  document.getElementById('status').className='status playing';
-  document.getElementById('timer').className='timer pulse';
-  document.getElementById('prevBtn').disabled=true;
-  document.getElementById('nextBtn').disabled=true;
-  playDrone();
-  interval=setInterval(()=>{
+  playing = true;
+  timeLeft = duration;
+  updateTimer();
+  const btn = document.getElementById('startBtn');
+  btn.textContent = '⏹ Остановить';
+  btn.className = 'btn-stop';
+  document.getElementById('prevBtn').disabled = true;
+  document.getElementById('nextBtn').disabled = true;
+  document.getElementById('status').textContent = '🎵 Медитация идёт... Харе Кришна 🙏';
+  document.getElementById('status').className = 'status active';
+  document.getElementById('timer').classList.add('pulse');
+  startDrone();
+  interval = setInterval(()=>{
     timeLeft--;
-    document.getElementById('timer').textContent=fmt(timeLeft);
-    if(timeLeft<=0){stop();
-      document.getElementById('status').textContent='✅ Медитация завершена! Харе Кришна!';
-      document.getElementById('status').className='status done';
-      playBell();
+    updateTimer();
+    if(timeLeft <= 0){ stop(); 
+      document.getElementById('status').textContent = '✅ Медитация завершена! Харе Кришна! 🙏';
     }
   },1000);
 }
 
 function stop(){
-  playing=false;clearInterval(interval);
-  document.getElementById('startBtn').textContent='▶ Начать';
-  document.getElementById('startBtn').className='btn-start';
-  document.getElementById('timer').className='timer';
-  document.getElementById('timer').textContent='08:00';
-  document.getElementById('prevBtn').disabled=false;
-  document.getElementById('nextBtn').disabled=false;
-  if(!document.getElementById('status').classList.contains('done')){
-    document.getElementById('status').textContent='Нажми «Начать» для медитации';
-    document.getElementById('status').className='status';
-  }
+  playing = false;
+  clearInterval(interval);
+  timeLeft = duration;
+  updateTimer();
+  const btn = document.getElementById('startBtn');
+  btn.textContent = '▶ Начать';
+  btn.className = 'btn-start';
+  document.getElementById('prevBtn').disabled = false;
+  document.getElementById('nextBtn').disabled = false;
+  document.getElementById('status').textContent = 'Готов к медитации';
+  document.getElementById('status').className = 'status';
+  document.getElementById('timer').classList.remove('pulse');
+  document.getElementById('progress').style.width = '0%';
   stopDrone();
 }
 
-function playDrone(){
-  if(!actx)return;
-  const g=actx.createGain();g.gain.value=0.12;g.connect(actx.destination);
-  const freqs=[136.1,272.2,204.15];
-  freqs.forEach(f=>{
-    const o=actx.createOscillator();o.type='sine';o.frequency.value=f;
-    const og=actx.createGain();og.gain.value=f===136.1?0.5:0.2;
-    o.connect(og);og.connect(g);o.start();nodes.push(o,og);
-  });
-  nodes.push(g);
-  // LFO for gentle pulsing
-  const lfo=actx.createOscillator();lfo.type='sine';lfo.frequency.value=0.15;
-  const lfoG=actx.createGain();lfoG.gain.value=0.03;
-  lfo.connect(lfoG);lfoG.connect(g.gain);lfo.start();nodes.push(lfo,lfoG);
-}
+function next(){ if(!playing){ idx=(idx+1)%3; renderSlide(); } }
+function prev(){ if(!playing){ idx=(idx-1+3)%3; renderSlide(); } }
 
-function stopDrone(){
-  nodes.forEach(n=>{try{n.stop?.()}catch(e){}try{n.disconnect()}catch(e){}});
-  nodes=[];
-}
-
-function playBell(){
-  if(!actx)return;
-  const o=actx.createOscillator();o.type='sine';o.frequency.value=528;
-  const g=actx.createGain();g.gain.setValueAtTime(0.3,actx.currentTime);
-  g.gain.exponentialRampToValueAtTime(0.001,actx.currentTime+3);
-  o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+3);
-}
-
-function next(){if(playing)return;idx=(idx+1)%3;render()}
-function prev(){if(playing)return;idx=(idx+2)%3;render()}
-
-render();
+renderSlide();
+updateTimer();
 </script>
 </body>
 </html>
