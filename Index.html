@@ -1,290 +1,88 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Джапа Медитация</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{
-  font-family:'Segoe UI',Tahoma,sans-serif;
-  background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);
-  min-height:100vh;display:flex;justify-content:center;align-items:center;
-  padding:15px;color:#fff;
-}
-.container{
-  background:rgba(255,255,255,0.07);backdrop-filter:blur(10px);
-  border-radius:24px;padding:25px;max-width:500px;width:100%;
-  box-shadow:0 20px 60px rgba(0,0,0,0.5);text-align:center;
-  border:1px solid rgba(255,255,255,0.1);
-}
-h1{font-size:22px;margin-bottom:15px;color:#f0c040;text-shadow:0 0 20px rgba(240,192,64,0.3)}
-.image-box{
-  width:100%;height:260px;border-radius:16px;overflow:hidden;
-  margin-bottom:15px;position:relative;
-  box-shadow:0 8px 30px rgba(0,0,0,0.4);
-}
-.image-box svg{width:100%;height:100%}
-.title{font-size:20px;color:#e8d5b7;margin-bottom:5px;font-weight:600}
-.subtitle{font-size:13px;color:#a89070;margin-bottom:15px}
-.timer{
-  font-size:52px;color:#f0c040;font-weight:bold;
-  font-family:'Courier New',monospace;margin:10px 0;
-  text-shadow:0 0 30px rgba(240,192,64,0.4);
-}
-.timer.pulse{animation:pulse 1s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
-.controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:15px 0}
-button{
-  padding:14px 22px;font-size:15px;border:none;border-radius:12px;
-  cursor:pointer;font-weight:600;transition:all 0.3s;
-  -webkit-tap-highlight-color:transparent;
-}
-button:active{transform:scale(0.95)}
-.btn-start{background:linear-gradient(135deg,#f0c040,#e8a020);color:#1a1a2e;min-width:180px}
-.btn-stop{background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;min-width:180px}
-.btn-nav{background:rgba(255,255,255,0.12);color:#e8d5b7;border:1px solid rgba(255,255,255,0.15)}
-.btn-nav:hover{background:rgba(255,255,255,0.2)}
-button:disabled{opacity:0.3;cursor:not-allowed;transform:none!important}
-.status{margin-top:10px;font-size:14px;color:#8a8a9a;min-height:20px}
-.status.active{color:#4ade80;font-weight:600}
-.demo-toggle{
-  margin-top:15px;font-size:12px;color:#666;cursor:pointer;
-  text-decoration:underline;
-}
-.mala{font-size:28px;margin:5px 0;letter-spacing:3px;opacity:0.6}
-.progress-bar{
-  width:100%;height:4px;background:rgba(255,255,255,0.1);
-  border-radius:2px;margin:10px 0;overflow:hidden;
-}
-.progress-fill{
-  height:100%;background:linear-gradient(90deg,#f0c040,#e8a020);
-  border-radius:2px;transition:width 1s linear;width:0%;
-}
+body{margin:0;padding:20px;font-family:Arial,sans-serif;background:#1a0533;color:#fff;text-align:center}
+.box{max-width:500px;margin:0 auto;background:rgba(255,255,255,0.1);padding:20px;border-radius:15px}
+h1{color:#ffd700;margin-bottom:20px}
+.image{width:100%;height:200px;background:#333;border-radius:10px;margin:15px 0;display:flex;align-items:center;justify-content:center;font-size:60px}
+.timer{font-size:48px;color:#ffd700;margin:20px 0;font-family:monospace}
+button{padding:15px 25px;margin:5px;font-size:16px;border:none;border-radius:8px;cursor:pointer;background:#ffd700;color:#000;font-weight:bold}
+button.stop{background:#ff4444;color:#fff}
+.status{margin-top:15px;color:#4ade80}
 </style>
 </head>
 <body>
-<div class="container">
-  <h1>🙏 Джапа Медитация</h1>
-  <div class="mala">📿</div>
-  
-  <div class="image-box" id="imageBox"></div>
-  
-  <div class="title" id="title"></div>
-  <div class="subtitle" id="subtitle"></div>
-  
-  <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
-  <div class="timer" id="timer">08:00</div>
-  
-  <div class="controls">
-    <button class="btn-nav" id="prevBtn" onclick="prev()">← Прошлая</button>
-    <button class="btn-start" id="startBtn" onclick="toggle()">▶ Начать</button>
-    <button class="btn-nav" id="nextBtn" onclick="next()">Следующая →</button>
-  </div>
-  
-  <div class="status" id="status">Выберите медитацию и нажмите «Начать»</div>
-  <div class="demo-toggle" onclick="toggleDemo()" id="demoLabel">Демо-режим: ВЫКЛ (нажми для 15 сек)</div>
+<div class="box">
+<h1>🙏 Джапа Медитация</h1>
+<div class="image" id="img">🙏</div>
+<div id="title">Шрила Свами Прабхупада</div>
+<div class="timer" id="timer">08:00</div>
+<div>
+<button onclick="prev()">◀ Прошлая</button>
+<button id="btn" onclick="toggle()">▶ Начать</button>
+<button onclick="next()">Следующая ▶</button>
+</div>
+<div class="status" id="status">Готов к медитации</div>
 </div>
 
 <script>
-const DURATION_FULL = 480;
-const DURATION_DEMO = 15;
-let demoMode = false;
-let duration = DURATION_FULL;
-let timeLeft = duration;
-let playing = false;
-let interval = null;
-let audioCtx = null;
-let gainNode = null;
-let oscillators = [];
-
-const slides = [
-  {
-    title: "Шрила Свами Прабхупада",
-    sub: "Основатель-ачарья ИСККОН",
-    bg1: "#b8860b", bg2: "#8B6914", bg3: "#DAA520",
-    symbol: "ॐ",
-    svgExtra: `<circle cx="150" cy="120" r="50" fill="none" stroke="#f0c040" stroke-width="2" opacity="0.4"/>
-               <circle cx="150" cy="120" r="70" fill="none" stroke="#f0c040" stroke-width="1" opacity="0.2"/>
-               <text x="150" y="200" text-anchor="middle" fill="#f5deb3" font-size="11" opacity="0.7">Харе Кришна Харе Кришна</text>
-               <text x="150" y="218" text-anchor="middle" fill="#f5deb3" font-size="11" opacity="0.7">Кришна Кришна Харе Харе</text>`
-  },
-  {
-    title: "Шри Чайтанья Махапрабху",
-    sub: "и Шри Нитьянанда Прабху",
-    bg1: "#2d6a4f", bg2: "#1b4332", bg3: "#52b788",
-    symbol: "☽",
-    svgExtra: `<circle cx="120" cy="120" r="40" fill="none" stroke="#90ee90" stroke-width="2" opacity="0.3"/>
-               <circle cx="180" cy="120" r="40" fill="none" stroke="#ffd700" stroke-width="2" opacity="0.3"/>
-               <text x="150" y="200" text-anchor="middle" fill="#d4edda" font-size="11" opacity="0.7">Харе Рама Харе Рама</text>
-               <text x="150" y="218" text-anchor="middle" fill="#d4edda" font-size="11" opacity="0.7">Рама Рама Харе Харе</text>`
-  },
-  {
-    title: "Шри Шри Радха-Кришна",
-    sub: "Вечная Божественная Чета",
-    bg1: "#4a1942", bg2: "#1a1a5e", bg3: "#c2185b",
-    symbol: "❀",
-    svgExtra: `<circle cx="130" cy="115" r="35" fill="none" stroke="#ff69b4" stroke-width="2" opacity="0.3"/>
-               <circle cx="170" cy="115" r="35" fill="none" stroke="#87ceeb" stroke-width="2" opacity="0.3"/>
-               <text x="150" y="195" text-anchor="middle" fill="#f8bbd0" font-size="11" opacity="0.7">Радхе Радхе Шьям</text>
-               <text x="150" y="213" text-anchor="middle" fill="#bbdefb" font-size="11" opacity="0.7">Шьям Шьям Радхе</text>`
-  }
+var data=[
+{title:"Шрила Свами Прабхупада",icon:"🙏",bg:"#1a237e"},
+{title:"Чайтанья Махапрабху и Нитьянанда",icon:"🙏🙏",bg:"#b71c1c"},
+{title:"Радха и Кришна",icon:"🙏🙏",bg:"#1b5e20"}
 ];
+var idx=0,playing=false,time=480,iv=null,actx=null;
 
-let idx = 0;
-
-function renderSlide(){
-  const s = slides[idx];
-  document.getElementById('imageBox').innerHTML = `
-    <svg viewBox="0 0 300 260" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="g${idx}" cx="50%" cy="40%" r="70%">
-          <stop offset="0%" stop-color="${s.bg3}" stop-opacity="0.6"/>
-          <stop offset="100%" stop-color="${s.bg1}"/>
-        </radialGradient>
-      </defs>
-      <rect width="300" height="260" fill="url(#g${idx})"/>
-      <rect width="300" height="260" fill="${s.bg2}" opacity="0.3"/>
-      ${s.svgExtra}
-      <text x="150" y="130" text-anchor="middle" fill="#fff" font-size="48" opacity="0.8">${s.symbol}</text>
-      <text x="150" y="245" text-anchor="middle" fill="#fff" font-size="13" opacity="0.5" font-style="italic">Медитация ${idx+1} из 3</text>
-    </svg>`;
-  document.getElementById('title').textContent = s.title;
-  document.getElementById('subtitle').textContent = s.sub;
+function render(){
+document.getElementById('img').textContent=data[idx].icon;
+document.getElementById('img').style.background=data[idx].bg;
+document.getElementById('title').textContent=data[idx].title;
 }
 
-function fmt(t){
-  const m=Math.floor(t/60), s=t%60;
-  return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
-}
-
-function updateTimer(){
-  document.getElementById('timer').textContent = fmt(timeLeft);
-  const pct = ((duration - timeLeft)/duration)*100;
-  document.getElementById('progress').style.width = pct+'%';
-}
-
-function toggleDemo(){
-  demoMode = !demoMode;
-  duration = demoMode ? DURATION_DEMO : DURATION_FULL;
-  if(!playing){ timeLeft = duration; updateTimer(); }
-  document.getElementById('demoLabel').textContent = 
-    demoMode ? 'Демо-режим: ВКЛ (15 сек, нажми для 8 мин)' : 'Демо-режим: ВЫКЛ (нажми для 15 сек)';
-}
-
-/* ---- Web Audio: медитативный Ом-дрон ---- */
-function startDrone(){
-  try {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    gainNode = audioCtx.createGain();
-    gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
-    gainNode.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + 2);
-    gainNode.connect(audioCtx.destination);
-
-    const freqs = [136.1, 272.2, 204.15]; // Ом-частоты
-    const types = ['sine','sine','triangle'];
-    const vols  = [0.5, 0.2, 0.15];
-
-    freqs.forEach((f,i) => {
-      const osc = audioCtx.createOscillator();
-      const g = audioCtx.createGain();
-      osc.type = types[i];
-      osc.frequency.setValueAtTime(f, audioCtx.currentTime);
-      // лёгкое вибрато
-      const lfo = audioCtx.createOscillator();
-      const lfoGain = audioCtx.createGain();
-      lfo.frequency.setValueAtTime(0.3 + i*0.1, audioCtx.currentTime);
-      lfoGain.gain.setValueAtTime(1.5, audioCtx.currentTime);
-      lfo.connect(lfoGain);
-      lfoGain.connect(osc.frequency);
-      lfo.start();
-
-      g.gain.setValueAtTime(vols[i], audioCtx.currentTime);
-      osc.connect(g);
-      g.connect(gainNode);
-      osc.start();
-      oscillators.push(osc, lfo);
-    });
-
-    // Периодический "колокольчик" каждые 4 сек
-    scheduleBell();
-  } catch(e){ console.log('Audio not supported'); }
-}
-
-function scheduleBell(){
-  if(!playing || !audioCtx) return;
-  const osc = audioCtx.createOscillator();
-  const g = audioCtx.createGain();
-  osc.type = 'sine';
-  osc.frequency.setValueAtTime(528, audioCtx.currentTime);
-  g.gain.setValueAtTime(0.08, audioCtx.currentTime);
-  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2);
-  osc.connect(g); g.connect(audioCtx.destination);
-  osc.start(); osc.stop(audioCtx.currentTime + 2);
-  setTimeout(scheduleBell, 4000);
-}
-
-function stopDrone(){
-  if(gainNode && audioCtx){
-    gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1);
-  }
-  setTimeout(()=>{
-    oscillators.forEach(o=>{try{o.stop()}catch(e){}});
-    oscillators=[];
-    if(audioCtx){try{audioCtx.close()}catch(e){}}
-    audioCtx=null; gainNode=null;
-  }, 1200);
-}
-
-/* ---- Управление ---- */
-function toggle(){
-  playing ? stop() : start();
-}
+function toggle(){playing?stop():start()}
 
 function start(){
-  playing = true;
-  timeLeft = duration;
-  updateTimer();
-  const btn = document.getElementById('startBtn');
-  btn.textContent = '⏹ Остановить';
-  btn.className = 'btn-stop';
-  document.getElementById('prevBtn').disabled = true;
-  document.getElementById('nextBtn').disabled = true;
-  document.getElementById('status').textContent = '🎵 Медитация идёт... Харе Кришна 🙏';
-  document.getElementById('status').className = 'status active';
-  document.getElementById('timer').classList.add('pulse');
-  startDrone();
-  interval = setInterval(()=>{
-    timeLeft--;
-    updateTimer();
-    if(timeLeft <= 0){ stop(); 
-      document.getElementById('status').textContent = '✅ Медитация завершена! Харе Кришна! 🙏';
-    }
-  },1000);
+playing=true;time=480;
+document.getElementById('btn').textContent='⏹ Стоп';
+document.getElementById('btn').className='stop';
+document.getElementById('status').textContent='🎵 Медитация идёт...';
+playSound();
+iv=setInterval(function(){
+time--;
+var m=Math.floor(time/60),s=time%60;
+document.getElementById('timer').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+if(time<=0){stop();document.getElementById('status').textContent='✅ Завершено!'}
+},1000);
 }
 
 function stop(){
-  playing = false;
-  clearInterval(interval);
-  timeLeft = duration;
-  updateTimer();
-  const btn = document.getElementById('startBtn');
-  btn.textContent = '▶ Начать';
-  btn.className = 'btn-start';
-  document.getElementById('prevBtn').disabled = false;
-  document.getElementById('nextBtn').disabled = false;
-  document.getElementById('status').textContent = 'Готов к медитации';
-  document.getElementById('status').className = 'status';
-  document.getElementById('timer').classList.remove('pulse');
-  document.getElementById('progress').style.width = '0%';
-  stopDrone();
+playing=false;clearInterval(iv);
+document.getElementById('btn').textContent='▶ Начать';
+document.getElementById('btn').className='';
+document.getElementById('timer').textContent='08:00';
+document.getElementById('status').textContent='Готов к медитации';
+if(actx){actx.close();actx=null}
 }
 
-function next(){ if(!playing){ idx=(idx+1)%3; renderSlide(); } }
-function prev(){ if(!playing){ idx=(idx-1+3)%3; renderSlide(); } }
+function playSound(){
+try{
+actx=new(window.AudioContext||window.webkitAudioContext)();
+var o=actx.createOscillator(),g=actx.createGain();
+o.frequency.value=136.1;o.type='sine';
+g.gain.value=0.15;
+o.connect(g);g.connect(actx.destination);
+o.start();
+}catch(e){}
+}
 
-renderSlide();
-updateTimer();
+function next(){if(!playing){idx=(idx+1)%3;render()}}
+function prev(){if(!playing){idx=(idx+2)%3;render()}}
+
+render();
 </script>
 </body>
 </html>
