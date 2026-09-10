@@ -406,10 +406,10 @@
         audioPlayer.volume = this.value;
     });
 
-    // Сброс кнопки по окончании трека
+    // Зацикливание мантры     
     audioPlayer.addEventListener('ended', function() {
-        playPauseBtn.innerHTML = "▶ Играть";
-        statusText.textContent = "Воспроизведение завершено";
+        audioPlayer.currentTime = 0; // Возвращаем трек в самое начало
+        audioPlayer.play();          // Запускаем его снова
     });
 
     // === Логика слайдера ===
