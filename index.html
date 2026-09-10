@@ -1,4 +1,6 @@
-<html lang="ru"><head>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Джапа-медитация</title>
@@ -220,7 +222,7 @@
             font-size: 14px;
             color: var(--text-secondary);
             font-style: italic;
-            min-height: 20px; /* Чтобы блок не прыгал, когда текст пустой */
+            min-height: 20px; 
         }
 
         .status-text {
@@ -236,39 +238,38 @@
 <div class="container">
     <h1>🕉 Джапа-медитация</h1>
 
-    <!-- 1. Слайдер изображений (теперь идет первым) -->
+    <!-- 1. Слайдер изображений -->
     <div class="section">
         <label>Образ для медитации и молитвы</label>
         <div class="slider-container">
             <div class="image-wrapper">
                 <button class="slider-btn prev-btn" id="prevBtn" aria-label="Предыдущее изображение">❮</button>
-                <img src="https://raw.githubusercontent.com/Taruni-dasi/Testing-new-code/main/assets/images/01%20Rupa%20Sanatana%20Math%20Vrinda.jpg" alt="Meditation Image" class="slide-image" id="slideImage" style="opacity: 1;">
+                <img src="" alt="Meditation Image" class="slide-image" id="slideImage">
                 <button class="slider-btn next-btn" id="nextBtn" aria-label="Следующее изображение">❯</button>
             </div>
         </div>
         <div class="description">
-            <div class="desc-ru" id="descRu">Божество Вринда Деви в Шри Рупа-Санатана Матхе во Вриндаване.</div>
-            <div class="desc-en" id="descEn"> </div>
+            <div class="desc-ru" id="descRu"></div>
+            <div class="desc-en" id="descEn"></div>
         </div>
     </div>
 
-    <!-- 2. Выбор мантры и Аудио плеер (теперь идет вторым) -->
+    <!-- 2. Выбор мантры и Аудио плеер -->
     <div class="section">
         <label for="mantraSelect">Выберите мантру для повторения:</label>
         <select id="mantraSelect">
             <option value="">-- Нажмите для выбора --</option>
-            <!-- Опции будут добавлены через JavaScript -->
-        <option value="audio/01_Srila-Gurudev-japa108-flute.mp3">Шрила Гурудев (с флейтой)</option><option value="audio/01_Srila-Gurudev-japa108.mp3">Шрила Гурудев</option><option value="audio/02-Srila-Prabhupada-japa108.mp3">Шрила Прабхупада</option><option value="audio/03_Prabhuji-japa108-quiet.mp3">Прабхуджи (тихий)</option></select>
+        </select>
         <div class="status-text" id="statusText">Мантра не выбрана</div>
 
         <div class="audio-controls">
             <div class="buttons-row">
-                <button id="playPauseBtn" disabled="">▶ Играть</button>
-                <button id="stopBtn" class="secondary" disabled="">⏹ Стоп</button>
+                <button id="playPauseBtn" disabled>▶ Играть</button>
+                <button id="stopBtn" class="secondary" disabled>⏹ Стоп</button>
             </div>
             <div class="volume-control">
                 <span>🔈</span>
-                <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.5" disabled="">
+                <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.5" disabled>
                 <span>🔊</span>
             </div>
         </div>
@@ -281,10 +282,9 @@
 <script>
     /* === ЛОГИКА (JavaScript) === */
     
-    // Базовый URL для ваших файлов на GitHub (raw формат для прямого доступа)
     const BASE_URL = "https://raw.githubusercontent.com/Taruni-dasi/Testing-new-code/main/assets/";
 
-    // 1. Данные мантр (аудиофайлы)
+    // Данные мантр
     const mantras = [
         { name: "Шрила Гурудев (с флейтой)", file: "audio/01_Srila-Gurudev-japa108-flute.mp3" },
         { name: "Шрила Гурудев", file: "audio/01_Srila-Gurudev-japa108.mp3" },
@@ -292,7 +292,7 @@
         { name: "Прабхуджи (тихий)", file: "audio/03_Prabhuji-japa108-quiet.mp3" }
     ];
 
-    // 2. Данные слайдов (изображения и описания)
+    // Данные слайдов
     const slides = [
         { 
             image: "images/01 Gurudev smiling.jpg", 
@@ -321,7 +321,6 @@
         }
     ];
 
-    // Переменные состояния
     let currentSlideIndex = 0;
 
     // Элементы DOM
@@ -338,17 +337,16 @@
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
 
-    // === Инициализация ===
     function init() {
-        // Заполняем выпадающий список мантр
+        // Очищаем список перед заполнением (чтобы не было дублей)
+        mantraSelect.innerHTML = '<option value="">-- Нажмите для выбора --</option>';
+        
         mantras.forEach((mantra) => {
             const option = document.createElement('option');
-            option.value = mantra.file; // Теперь храним путь к файлу как значение
+            option.value = mantra.file;
             option.textContent = mantra.name;
             mantraSelect.appendChild(option);
         });
-
-        // Загружаем первый слайд
         updateSlide();
     }
 
@@ -368,7 +366,6 @@
         audioPlayer.src = audioUrl;
         audioPlayer.load();
         
-        // Находим имя выбранной мантры для статуса
         const selectedOption = this.options[this.selectedIndex];
         statusText.textContent = `Готово к воспроизведению: ${selectedOption.textContent}`;
         
@@ -386,7 +383,7 @@
                 statusText.textContent = "Воспроизведение...";
             }).catch(error => {
                 console.error("Ошибка воспроизведения:", error);
-                statusText.textContent = "Ошибка воспроизведения. Попробуйте еще раз.";
+                statusText.textContent = "Ошибка воспроизведения.";
             });
         } else {
             audioPlayer.pause();
@@ -397,7 +394,7 @@
 
     stopBtn.addEventListener('click', function() {
         audioPlayer.pause();
-        audioPlayer.currentTime = 0;
+        audioPlayer.currentTime = 0; 
         playPauseBtn.innerHTML = "▶ Играть";
         statusText.textContent = "Остановлено";
     });
@@ -406,10 +403,10 @@
         audioPlayer.volume = this.value;
     });
 
-    // Зацикливание мантры     
+    // 🔄 Зацикливание мантры
     audioPlayer.addEventListener('ended', function() {
-        audioPlayer.currentTime = 0; // Возвращаем трек в самое начало
-        audioPlayer.play();          // Запускаем его снова
+        audioPlayer.currentTime = 0; 
+        audioPlayer.play();          
     });
 
     // === Логика слайдера ===
@@ -419,7 +416,6 @@
         descRu.textContent = slide.descRu;
         descEn.textContent = slide.descEn || " "; 
         
-        // Плавное появление
         slideImage.style.opacity = 0;
         setTimeout(() => {
             slideImage.style.opacity = 1;
@@ -436,9 +432,9 @@
         updateSlide();
     });
 
-    // Запуск
+    // Запуск приложения
     init();
 </script>
 
-
-</body></html>
+</body>
+</html>
