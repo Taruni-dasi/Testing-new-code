@@ -1,88 +1,444 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Джапа Медитация</title>
-<style>
-body{margin:0;padding:20px;font-family:Arial,sans-serif;background:#1a0533;color:#fff;text-align:center}
-.box{max-width:500px;margin:0 auto;background:rgba(255,255,255,0.1);padding:20px;border-radius:15px}
-h1{color:#ffd700;margin-bottom:20px}
-.image{width:100%;height:200px;background:#333;border-radius:10px;margin:15px 0;display:flex;align-items:center;justify-content:center;font-size:60px}
-.timer{font-size:48px;color:#ffd700;margin:20px 0;font-family:monospace}
-button{padding:15px 25px;margin:5px;font-size:16px;border:none;border-radius:8px;cursor:pointer;background:#ffd700;color:#000;font-weight:bold}
-button.stop{background:#ff4444;color:#fff}
-.status{margin-top:15px;color:#4ade80}
-</style>
+<html lang="ru"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Джапа-медитация</title>
+    <style>
+        /* === СТИЛИ (CSS) === */
+        :root {
+            --primary-color: #ff9933; /* Шафрановый цвет */
+            --primary-hover: #e68a00;
+            --bg-color: #fdfbf7;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --text-secondary: #666666;
+            --border-radius: 16px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fdfbf7 0%, #f4e4c1 100%);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 28px;
+            font-weight: 600;
+            margin-top: 0;
+        }
+
+        /* Секции */
+        .section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #fff;
+            cursor: pointer;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        /* Аудио плеер */
+        .audio-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .buttons-row {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        button.secondary {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        button.secondary:hover {
+            background-color: #d0d0d0;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 250px;
+        }
+
+        input[type="range"] {
+            flex-grow: 1;
+            accent-color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        /* Слайдер изображений */
+        .slider-container {
+            position: relative;
+            margin: 10px 0;
+        }
+
+        .image-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4/3;
+            background-color: #f0f0f0;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: opacity 0.3s ease;
+        }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.85);
+            color: var(--primary-color);
+            border: 1px solid rgba(0,0,0,0.05);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: background-color 0.3s, transform 0.1s;
+            padding: 0;
+        }
+
+        .slider-btn:hover {
+            background-color: white;
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .slider-btn:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .prev-btn { left: 12px; }
+        .next-btn { right: 12px; }
+
+        .description {
+            margin-top: 20px;
+            padding: 15px 20px;
+            background-color: #f9f9f9;
+            border-radius: 12px;
+            text-align: left;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .desc-ru {
+            font-size: 16px;
+            color: var(--text-color);
+            margin-bottom: 8px;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .desc-en {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-style: italic;
+            min-height: 20px; /* Чтобы блок не прыгал, когда текст пустой */
+        }
+
+        .status-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 10px;
+            min-height: 20px;
+        }
+    </style>
 </head>
 <body>
-<div class="box">
-<h1>🙏 Джапа Медитация</h1>
-<div class="image" id="img">🙏</div>
-<div id="title">Шрила Свами Прабхупада</div>
-<div class="timer" id="timer">08:00</div>
-<div>
-<button onclick="prev()">◀ Прошлая</button>
-<button id="btn" onclick="toggle()">▶ Начать</button>
-<button onclick="next()">Следующая ▶</button>
-</div>
-<div class="status" id="status">Готов к медитации</div>
+
+<div class="container">
+    <h1>🕉 Джапа-медитация</h1>
+
+    <!-- 1. Слайдер изображений (теперь идет первым) -->
+    <div class="section">
+        <label>Образ для медитации и молитвы</label>
+        <div class="slider-container">
+            <div class="image-wrapper">
+                <button class="slider-btn prev-btn" id="prevBtn" aria-label="Предыдущее изображение">❮</button>
+                <img src="https://raw.githubusercontent.com/Taruni-dasi/Testing-new-code/main/assets/images/01%20Rupa%20Sanatana%20Math%20Vrinda.jpg" alt="Meditation Image" class="slide-image" id="slideImage" style="opacity: 1;">
+                <button class="slider-btn next-btn" id="nextBtn" aria-label="Следующее изображение">❯</button>
+            </div>
+        </div>
+        <div class="description">
+            <div class="desc-ru" id="descRu">Божество Вринда Деви в Шри Рупа-Санатана Матхе во Вриндаване.</div>
+            <div class="desc-en" id="descEn"> </div>
+        </div>
+    </div>
+
+    <!-- 2. Выбор мантры и Аудио плеер (теперь идет вторым) -->
+    <div class="section">
+        <label for="mantraSelect">Выберите мантру для повторения:</label>
+        <select id="mantraSelect">
+            <option value="">-- Нажмите для выбора --</option>
+            <!-- Опции будут добавлены через JavaScript -->
+        <option value="audio/01_Srila-Gurudev-japa108-flute.mp3">Шрила Гурудев (с флейтой)</option><option value="audio/01_Srila-Gurudev-japa108.mp3">Шрила Гурудев</option><option value="audio/02-Srila-Prabhupada-japa108.mp3">Шрила Прабхупада</option><option value="audio/03_Prabhuji-japa108-quiet.mp3">Прабхуджи (тихий)</option></select>
+        <div class="status-text" id="statusText">Мантра не выбрана</div>
+
+        <div class="audio-controls">
+            <div class="buttons-row">
+                <button id="playPauseBtn" disabled="">▶ Играть</button>
+                <button id="stopBtn" class="secondary" disabled="">⏹ Стоп</button>
+            </div>
+            <div class="volume-control">
+                <span>🔈</span>
+                <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.5" disabled="">
+                <span>🔊</span>
+            </div>
+        </div>
+        
+        <!-- Скрытый аудио элемент -->
+        <audio id="audioPlayer"></audio>
+    </div>
 </div>
 
 <script>
-var data=[
-{title:"Шрила Свами Прабхупада",icon:"🙏",bg:"#1a237e"},
-{title:"Чайтанья Махапрабху и Нитьянанда",icon:"🙏🙏",bg:"#b71c1c"},
-{title:"Радха и Кришна",icon:"🙏🙏",bg:"#1b5e20"}
-];
-var idx=0,playing=false,time=480,iv=null,actx=null;
+    /* === ЛОГИКА (JavaScript) === */
+    
+    // Базовый URL для ваших файлов на GitHub (raw формат для прямого доступа)
+    const BASE_URL = "https://raw.githubusercontent.com/Taruni-dasi/Testing-new-code/main/assets/";
 
-function render(){
-document.getElementById('img').textContent=data[idx].icon;
-document.getElementById('img').style.background=data[idx].bg;
-document.getElementById('title').textContent=data[idx].title;
-}
+    // 1. Данные мантр (аудиофайлы)
+    const mantras = [
+        { name: "Шрила Гурудев (с флейтой)", file: "audio/01_Srila-Gurudev-japa108-flute.mp3" },
+        { name: "Шрила Гурудев", file: "audio/01_Srila-Gurudev-japa108.mp3" },
+        { name: "Шрила Прабхупада", file: "audio/02-Srila-Prabhupada-japa108.mp3" },
+        { name: "Прабхуджи (тихий)", file: "audio/03_Prabhuji-japa108-quiet.mp3" }
+    ];
 
-function toggle(){playing?stop():start()}
+    // 2. Данные слайдов (изображения и описания)
+    const slides = [
+        { 
+            image: "images/01 Gurudev smiling.jpg", 
+            descRu: "Шрила Гурудев улыбается, даря благословения преданным.", 
+            descEn: "" 
+        },
+        { 
+            image: "images/01 Gurudev.jpg", 
+            descRu: "Шрила Гурудев в медитации и молитве.", 
+            descEn: "" 
+        },
+        { 
+            image: "images/01 Rupa Sanatana Math Vrinda.jpg", 
+            descRu: "Шри Рупа-Санатана Матх во Вриндаване.", 
+            descEn: "" 
+        },
+        {
+            image: "images/04 Swami Prabhupada Deities.png",
+            descRu: "Шрила Прабхупада и Божества.",
+            descEn: ""
+        },
+        {
+            image: "images/05 Bhakti_Pragyana_Keshava_murti_Radhe_Kunj.jpg",
+            descRu: "Бхакти Прагьяна Кешава Махарадж и Радха Кундж.",
+            descEn: ""
+        }
+    ];
 
-function start(){
-playing=true;time=480;
-document.getElementById('btn').textContent='⏹ Стоп';
-document.getElementById('btn').className='stop';
-document.getElementById('status').textContent='🎵 Медитация идёт...';
-playSound();
-iv=setInterval(function(){
-time--;
-var m=Math.floor(time/60),s=time%60;
-document.getElementById('timer').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
-if(time<=0){stop();document.getElementById('status').textContent='✅ Завершено!'}
-},1000);
-}
+    // Переменные состояния
+    let currentSlideIndex = 0;
 
-function stop(){
-playing=false;clearInterval(iv);
-document.getElementById('btn').textContent='▶ Начать';
-document.getElementById('btn').className='';
-document.getElementById('timer').textContent='08:00';
-document.getElementById('status').textContent='Готов к медитации';
-if(actx){actx.close();actx=null}
-}
+    // Элементы DOM
+    const mantraSelect = document.getElementById('mantraSelect');
+    const audioPlayer = document.getElementById('audioPlayer');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const volumeSlider = document.getElementById('volumeSlider');
+    const statusText = document.getElementById('statusText');
+    
+    const slideImage = document.getElementById('slideImage');
+    const descRu = document.getElementById('descRu');
+    const descEn = document.getElementById('descEn');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
 
-function playSound(){
-try{
-actx=new(window.AudioContext||window.webkitAudioContext)();
-var o=actx.createOscillator(),g=actx.createGain();
-o.frequency.value=136.1;o.type='sine';
-g.gain.value=0.15;
-o.connect(g);g.connect(actx.destination);
-o.start();
-}catch(e){}
-}
+    // === Инициализация ===
+    function init() {
+        // Заполняем выпадающий список мантр
+        mantras.forEach((mantra) => {
+            const option = document.createElement('option');
+            option.value = mantra.file; // Теперь храним путь к файлу как значение
+            option.textContent = mantra.name;
+            mantraSelect.appendChild(option);
+        });
 
-function next(){if(!playing){idx=(idx+1)%3;render()}}
-function prev(){if(!playing){idx=(idx+2)%3;render()}}
+        // Загружаем первый слайд
+        updateSlide();
+    }
 
-render();
+    // === Логика аудио ===
+    mantraSelect.addEventListener('change', function() {
+        const selectedFile = this.value;
+        if (selectedFile === "") {
+            statusText.textContent = "Мантра не выбрана";
+            playPauseBtn.disabled = true;
+            stopBtn.disabled = true;
+            volumeSlider.disabled = true;
+            audioPlayer.src = "";
+            return;
+        }
+
+        const audioUrl = BASE_URL + encodeURI(selectedFile);
+        audioPlayer.src = audioUrl;
+        audioPlayer.load();
+        
+        // Находим имя выбранной мантры для статуса
+        const selectedOption = this.options[this.selectedIndex];
+        statusText.textContent = `Готово к воспроизведению: ${selectedOption.textContent}`;
+        
+        playPauseBtn.disabled = false;
+        stopBtn.disabled = false;
+        volumeSlider.disabled = false;
+        
+        playPauseBtn.innerHTML = "▶ Играть";
+    });
+
+    playPauseBtn.addEventListener('click', function() {
+        if (audioPlayer.paused) {
+            audioPlayer.play().then(() => {
+                playPauseBtn.innerHTML = "⏸ Пауза";
+                statusText.textContent = "Воспроизведение...";
+            }).catch(error => {
+                console.error("Ошибка воспроизведения:", error);
+                statusText.textContent = "Ошибка воспроизведения. Попробуйте еще раз.";
+            });
+        } else {
+            audioPlayer.pause();
+            playPauseBtn.innerHTML = "▶ Играть";
+            statusText.textContent = "На паузе";
+        }
+    });
+
+    stopBtn.addEventListener('click', function() {
+        audioPlayer.pause();
+        audioPlayer.currentTime = 0;
+        playPauseBtn.innerHTML = "▶ Играть";
+        statusText.textContent = "Остановлено";
+    });
+
+    volumeSlider.addEventListener('input', function() {
+        audioPlayer.volume = this.value;
+    });
+
+    // Сброс кнопки по окончании трека
+    audioPlayer.addEventListener('ended', function() {
+        playPauseBtn.innerHTML = "▶ Играть";
+        statusText.textContent = "Воспроизведение завершено";
+    });
+
+    // === Логика слайдера ===
+    function updateSlide() {
+        const slide = slides[currentSlideIndex];
+        slideImage.src = BASE_URL + encodeURI(slide.image);
+        descRu.textContent = slide.descRu;
+        descEn.textContent = slide.descEn || " "; 
+        
+        // Плавное появление
+        slideImage.style.opacity = 0;
+        setTimeout(() => {
+            slideImage.style.opacity = 1;
+        }, 50);
+    }
+
+    prevBtn.addEventListener('click', function() {
+        currentSlideIndex = (currentSlideIndex === 0) ? slides.length - 1 : currentSlideIndex - 1;
+        updateSlide();
+    });
+
+    nextBtn.addEventListener('click', function() {
+        currentSlideIndex = (currentSlideIndex === slides.length - 1) ? 0 : currentSlideIndex + 1;
+        updateSlide();
+    });
+
+    // Запуск
+    init();
 </script>
-</body>
-</html>
+
+
+</body></html>
